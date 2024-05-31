@@ -38,6 +38,14 @@ public:
     UFUNCTION(BlueprintCallable, Category = "FairyGUI", meta = (DeterminesOutputType = "ClassType"))
     UGObject* GetChild(const FString& ChildName, TSubclassOf<UGObject> ClassType = nullptr) const;
 
+    template< class T >
+    FORCEINLINE T* GetChild(const FString& ChildName)
+    {
+        static_assert(TPointerIsConvertibleFromTo<T, const UGObject>::Value, "'T' template parameter to GetChild must be derived from UGObject");
+
+        return Cast<T>(GetChild(ChildName,T::StaticClass()));
+    }
+
     UFUNCTION(BlueprintCallable, Category = "FairyGUI", meta = (DeterminesOutputType = "ClassType"))
     UGObject* GetChildByPath(const FString& Path, TSubclassOf<UGObject> ClassType = nullptr) const;
 
