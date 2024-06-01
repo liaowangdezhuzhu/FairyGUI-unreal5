@@ -18,11 +18,13 @@ UGTextInput::UGTextInput()
 				FRegexMatcher RegexMatcher(RegexPattern, ChangedText);
 				RegexMatcher.SetLimits(0, ChangedText.Len());
 				if (!RegexMatcher.FindNext())
+					SetText(Text);
 					return;
 			}
 			else if (bOnlyNumeric)
 			{
 				if (!ChangedText.IsNumeric())
+					SetText(Text);
 					return;
 			}
 			if (MaxLength >= 0)
