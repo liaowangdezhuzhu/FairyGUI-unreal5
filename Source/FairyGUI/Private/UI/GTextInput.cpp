@@ -12,7 +12,7 @@ UGTextInput::UGTextInput()
 		DisplayObject = Content = SNew(STextInput).GObject(this);
 		Content->SetOnTextChanged(FOnTextChanged::CreateLambda([this](const FText& InText)
 		{
-			if (IsValidText(InText))
+			if (InText.IsEmpty() || IsValidText(InText))
 			{
 				Text = InText.ToString();
 				if (OnTextChanged.IsBound())
@@ -25,7 +25,7 @@ UGTextInput::UGTextInput()
 		}));
 		Content->SetOnTextCommitted(FOnTextCommitted::CreateLambda([this](const FText& InText, ETextCommit::Type InType)
 		{
-			if (IsValidText(InText))
+			if (InText.IsEmpty() || IsValidText(InText))
 			{
 				if (InType == ETextCommit::OnEnter)
 					DispatchEvent(FUIEvents::Submit);
