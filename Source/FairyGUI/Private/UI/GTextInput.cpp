@@ -12,45 +12,31 @@ UGTextInput::UGTextInput()
 		DisplayObject = Content = SNew(STextInput).GObject(this);
 		Content->SetOnTextChanged(FOnTextChanged::CreateLambda([this](const FText& InText)
 		{
-			FString ChangedText = InText.ToString();
-			if (bHasRegexPattern)
+			if (IsValidText(InText))
 			{
-				FRegexMatcher RegexMatcher(RegexPattern, ChangedText);
-				RegexMatcher.SetLimits(0, ChangedText.Len());
-				if (!RegexMatcher.FindNext())
-				{
-					SetText(Text);
-					return;
-				}
+				Text = InText.ToString();
+				if (OnTextChanged.IsBound())
+					OnTextChanged.Broadcast(InText);
 			}
-			else if (bOnlyNumeric)
+			else
 			{
-				if (!ChangedText.IsNumeric())
-				{
-					SetText(Text);
-					return;
-				}
+				SetText(Text);
 			}
-			if (MaxLength >= 0)
-			{
-				if (ChangedText.Len() > MaxLength)
-				{
-					SetText(Text);
-					return;
-				}
-			}
-			Text = InText.ToString();
-
-			if (OnTextChanged.IsBound())
-				OnTextChanged.Broadcast(InText);
 		}));
 		Content->SetOnTextCommitted(FOnTextCommitted::CreateLambda([this](const FText& InText, ETextCommit::Type InType)
 		{
-			if (InType == ETextCommit::OnEnter)
-				DispatchEvent(FUIEvents::Submit);
+			if (IsValidText(InText))
+			{
+				if (InType == ETextCommit::OnEnter)
+					DispatchEvent(FUIEvents::Submit);
 
-			if (OnTextCommitted.IsBound())
-				OnTextCommitted.Broadcast(InText, InType);
+				if (OnTextCommitted.IsBound())
+					OnTextCommitted.Broadcast(InText, InType);
+			}
+			else
+			{
+				SetText(Text);
+			}
 		}));
 	}
 }
@@ -134,6 +120,38 @@ void UGTextInput::NotifyTextChanged(const FText& InText)
 {
 	Text = InText.ToString();
 }
+
+bool UGTextInput::IsValidText(const FText& InText)
+{
+	const FString ChangedText = InText.ToString();
+	if (bHasRegexPattern)
+	{
+		FRegexMatcher RegexMatcher(RegexPattern, ChangedText);
+		RegexMatcher.SetLimits(0, ChangedText.Len());
+		if (!RegexMatcher.FindNext())
+		{
+			SetText(Text);
+			return false;;
+		}
+	}
+	else if (bOnlyNumeric)
+	{
+		if (!ChangedText.IsNumeric())
+		{
+			return false;
+		}
+	}
+	if (MaxLength >= 0)
+	{
+		if (ChangedText.Len() > MaxLength)
+		{
+			return false;
+		}
+	}
+
+	return true;
+}
+
 
 FNVariant UGTextInput::GetProp(EObjectPropID PropID) const
 {

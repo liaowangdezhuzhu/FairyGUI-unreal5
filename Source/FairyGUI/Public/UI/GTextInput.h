@@ -63,7 +63,7 @@ public:
 
 	UFUNCTION(BlueprintPure, Category = "FairyGUI")
 	int32 GetMaxLength() const;
-
+	
 	UPROPERTY(BlueprintAssignable, Category = "FairyGUI|Event")
 	FGUIEventDynMDelegate OnSubmit;
 
@@ -79,6 +79,7 @@ public:
 	void NotifyTextChanged(const FText& InText);
 
 protected:
+	virtual bool IsValidText(const FText& InText);
 	virtual void SetupBeforeAdd(FByteBuffer* Buffer, int32 BeginPos) override;
 	virtual void SetupAfterAdd(FByteBuffer* Buffer, int32 BeginPos) override;
 
