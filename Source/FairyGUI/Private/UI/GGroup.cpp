@@ -1,4 +1,6 @@
 #include "UI/GGroup.h"
+
+#include "FairyApplication.h"
 #include "UI/GComponent.h"
 #include "Utils/ByteBuffer.h"
 #include "Widgets/SDisplayObject.h"
