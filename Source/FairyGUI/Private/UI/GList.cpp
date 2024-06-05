@@ -934,6 +934,16 @@ int32 UGList::ItemIndexToChildIndex(int32 Index) const
     }
 }
 
+void UGList::SetPayload(UObject* NewPayload)
+{
+    Payload = NewPayload;
+}
+
+UObject* UGList::GetPayload() const
+{
+    return Payload;
+}
+
 void UGList::SetVirtual()
 {
     SetVirtual(false);
@@ -1170,7 +1180,7 @@ void UGList::DoRefreshVirtualList()
     float ch = 0, cw = 0;
     if (RealNumItems > 0)
     {
-        int32 len = FMath::FloorToInt((float)RealNumItems / CurLineItemCount) * CurLineItemCount;
+        int32 len = FMath::CeilToInt((float)RealNumItems / CurLineItemCount) * CurLineItemCount;
         int32 len2 = FMath::Min(CurLineItemCount, RealNumItems);
         if (Layout == EListLayoutType::SingleColumn || Layout == EListLayoutType::FlowHorizontal)
         {

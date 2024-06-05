@@ -153,6 +153,12 @@ public:
     UFUNCTION(BlueprintCallable, Category = "FairyGUI")
     int32 ItemIndexToChildIndex(int32 Index) const;
 
+    UFUNCTION(BlueprintCallable, Category = "FairyGUI")
+    void SetPayload(UObject* NewPayload);
+
+    UFUNCTION(BlueprintPure, Category = "FairyGUI")
+    UObject* GetPayload() const;
+
     virtual FVector2D GetSnappingPosition(const FVector2D& InPoint) override;
 
     void SetItemRenderer(const FListItemRenderer& InItemRenderer) { ItemRenderer = InItemRenderer; }
@@ -267,4 +273,7 @@ private:
         FItemInfo();
     };
     TArray<FItemInfo> VirtualItems;
+
+    UPROPERTY()
+    UObject* Payload;
 };
