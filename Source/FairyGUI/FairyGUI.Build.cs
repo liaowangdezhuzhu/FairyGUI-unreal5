@@ -25,7 +25,9 @@ public class FairyGUI : ModuleRules
 		PublicDependencyModuleNames.AddRange(
 			new string[]
 			{
-				"Core",
+				"Core", 
+				"HTTP",
+				"UMG"
 				// ... add other public dependencies that you statically link with here ...
 			}
 			);

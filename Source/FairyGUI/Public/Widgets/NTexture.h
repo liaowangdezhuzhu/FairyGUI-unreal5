@@ -19,7 +19,7 @@ public:
     UPROPERTY(Transient)
     UNTexture* Root;
     UPROPERTY(Transient)
-    UTexture2D* NativeTexture;
+    UTexture* NativeTexture;
 
     FBox2D UVRect;
     bool bRotated;
@@ -28,6 +28,8 @@ public:
     FVector2D OriginalSize;
 
     void Init(UTexture2D* NewNativeTexture);
+    void Init(UTexture* NewNativeTexture);
+    void Init(UTexture* NewNativeTexture, float ScaleX, float ScaleY);
     void Init(UTexture2D* NewNativeTexture, float ScaleX, float ScaleY);
     void Init(UTexture2D* NewNativeTexture, const FBox2D& NewRegion);
     void Init(UNTexture* NewRoot, const FBox2D& NewRegion, bool bNewRotated);

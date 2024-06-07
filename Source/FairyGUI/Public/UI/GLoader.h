@@ -1,6 +1,7 @@
 #pragma once
 
 #include "GObject.h"
+#include "Interfaces/IHttpRequest.h"
 #include "GLoader.generated.h"
 
 UCLASS(BlueprintType, Blueprintable)
@@ -95,6 +96,9 @@ protected:
     void LoadContent();
     void ClearContent();
     void LoadFromPackage(const FString& ItemURL);
+    void LoadFromHttp(const FString& HttpURL);
+    UFUNCTION()
+    void OnImageDownloaded(UTexture2DDynamic* Texture);
     void LoadExternal();
     void OnExternalLoaded(FString LoadingURL);
     void UpdateLayout();

@@ -148,8 +148,8 @@ void SFImage::OnPopulateMesh(FVertexHelper& Helper)
         UNTexture* Texture = Graphics.GetTexture();
         if (Texture->Root == Texture
             && Texture->NativeTexture != nullptr
-            && Texture->NativeTexture->AddressX == TextureAddress::TA_Mirror
-            && Texture->NativeTexture->AddressY == TextureAddress::TA_Mirror)
+            && Texture->NativeTexture->GetTextureAddressX() == TextureAddress::TA_Mirror
+            && Texture->NativeTexture->GetTextureAddressY() == TextureAddress::TA_Mirror)
         {
             FBox2D UVRect = Helper.UVRect;
             UVRect.Max = UVRect.Min + UVRect.GetSize() * Helper.ContentRect.GetSize() / Texture->GetSize() * TextureScale;

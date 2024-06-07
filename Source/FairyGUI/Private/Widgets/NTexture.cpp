@@ -50,6 +50,30 @@ void UNTexture::Init(UTexture2D* InNativeTexture)
     Init(InNativeTexture, 1, 1);
 }
 
+void UNTexture::Init(UTexture* NewNativeTexture)
+{
+    Init(NewNativeTexture, 1, 1);
+}
+
+void UNTexture::Init(UTexture* NewNativeTexture, float ScaleX, float ScaleY)
+{
+    NativeTexture = NewNativeTexture;
+    UVRect = FBox2D(FVector2D::ZeroVector, FVector2D(ScaleX, ScaleY));
+    if (ScaleY < 0)
+    {
+        UVRect.Min.Y = -ScaleY;
+        UVRect.Max.Y = 0;
+    }
+    if (ScaleX < 0)
+    {
+        UVRect.Min.X = -ScaleX;
+        UVRect.Max.X = 0;
+    }
+    if (NativeTexture != nullptr)
+        OriginalSize.Set(NewNativeTexture->GetSurfaceWidth(), NewNativeTexture->GetSurfaceHeight());
+    Region = FBox2D(FVector2D::ZeroVector, FVector2D(OriginalSize.X, OriginalSize.Y));
+}
+
 void UNTexture::Init(UTexture2D* InNativeTexture, float ScaleX, float ScaleY)
 {
     NativeTexture = InNativeTexture;
@@ -65,7 +89,7 @@ void UNTexture::Init(UTexture2D* InNativeTexture, float ScaleX, float ScaleY)
         UVRect.Max.X = 0;
     }
     if (NativeTexture != nullptr)
-        OriginalSize.Set(NativeTexture->GetSurfaceWidth(), NativeTexture->GetSurfaceHeight());
+        OriginalSize.Set(InNativeTexture->GetSurfaceWidth(), InNativeTexture->GetSurfaceHeight());
     Region = FBox2D(FVector2D::ZeroVector, FVector2D(OriginalSize.X, OriginalSize.Y));
 }
 
@@ -78,10 +102,10 @@ void UNTexture::Init(UTexture2D* InNativeTexture, const FBox2D& InRegion)
 
     if (NativeTexture != nullptr)
     {
-        UVRect = FBox2D(FVector2D(Region.Min.X / NativeTexture->GetSurfaceWidth(),
-            Region.Min.Y / NativeTexture->GetSurfaceHeight()),
-            FVector2D(Region.Max.X / NativeTexture->GetSurfaceWidth(),
-                Region.Max.Y / NativeTexture->GetSurfaceHeight()));
+        UVRect = FBox2D(FVector2D(Region.Min.X / InNativeTexture->GetSurfaceWidth(),
+            Region.Min.Y / InNativeTexture->GetSurfaceHeight()),
+            FVector2D(Region.Max.X / InNativeTexture->GetSurfaceWidth(),
+                Region.Max.Y / InNativeTexture->GetSurfaceHeight()));
     }
     else
         UVRect = FBox2D(FVector2D::ZeroVector, FVector2D(1, 1));

@@ -1,4 +1,9 @@
 #include "UI/GLoader.h"
+
+#include "HttpModule.h"
+#include "IImageWrapper.h"
+#include "IImageWrapperModule.h"
+#include "Blueprint/AsyncTaskDownloadImage.h"
 #include "UI/UIPackage.h"
 #include "UI/GComponent.h"
 #include "Widgets/NTexture.h"
@@ -6,6 +11,7 @@
 #include "Widgets/SContainer.h"
 #include "Utils/ByteBuffer.h"
 #include "Engine/AssetManager.h"
+#include "Interfaces/IHttpRequest.h"
 
 UGLoader::UGLoader()
 {
@@ -28,6 +34,7 @@ void UGLoader::SetURL(const FString& InURL)
     if (URL.Compare(InURL, ESearchCase::CaseSensitive) == 0)
         return;
 
+    
     ClearContent();
     URL = InURL;
     LoadContent();
@@ -176,6 +183,8 @@ void UGLoader::LoadContent()
 
     if (URL.StartsWith("ui://"))
         LoadFromPackage(URL);
+    else if(URL.StartsWith(TEXT("http://")) && !URL.StartsWith(TEXT("https://")))
+        LoadFromHttp(URL);
     else
         LoadExternal();
 }
@@ -241,6 +250,24 @@ void UGLoader::LoadFromPackage(const FString& ItemURL)
     }
     else
         SetErrorState();
+}
+
+void UGLoader::LoadFromHttp(const FString& HttpURL)
+{
+   UAsyncTaskDownloadImage::DownloadImage(HttpURL)->OnSuccess.AddUniqueDynamic(this,&ThisClass::OnImageDownloaded);
+}
+
+void UGLoader::OnImageDownloaded(UTexture2DDynamic* Texture)
+{
+    if(Texture == nullptr)
+        return;
+    
+    UNTexture* NTexture = NewObject<UNTexture>(this);
+    NTexture->Init(Texture,1,1);
+    Content->SetTexture(NTexture);
+    Content->SetNativeSize();
+    SourceSize = NTexture->GetSize();
+    UpdateLayout();
 }
 
 void UGLoader::LoadExternal()
