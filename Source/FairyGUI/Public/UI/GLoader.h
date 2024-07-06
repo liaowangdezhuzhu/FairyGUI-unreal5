@@ -18,6 +18,9 @@ public:
     UFUNCTION(BlueprintCallable, Category = "FairyGUI")
     void SetURL(const FString& InURL);
 
+    UFUNCTION(BlueprintCallable,Category = "FairyGUI")
+    void SetImage(UTexture* Texture);
+
     virtual const FString& GetIcon() const override { return URL; }
     virtual void SetIcon(const FString& InIcon) override { SetURL(InIcon); }
 

@@ -41,6 +41,19 @@ void UGLoader::SetURL(const FString& InURL)
     UpdateGear(7);
 }
 
+void UGLoader::SetImage(UTexture* Texture)
+{
+    if(Texture == nullptr)
+        return;
+    
+    UNTexture* NTexture = NewObject<UNTexture>(this);
+    NTexture->Init(Texture,1,1);
+    Content->SetTexture(NTexture);
+    Content->SetNativeSize();
+    SourceSize = NTexture->GetSize();
+    UpdateLayout();
+}
+
 void UGLoader::SetAlign(EAlignType InAlign)
 {
     if (Align != InAlign)
@@ -259,15 +272,7 @@ void UGLoader::LoadFromHttp(const FString& HttpURL)
 
 void UGLoader::OnImageDownloaded(UTexture2DDynamic* Texture)
 {
-    if(Texture == nullptr)
-        return;
-    
-    UNTexture* NTexture = NewObject<UNTexture>(this);
-    NTexture->Init(Texture,1,1);
-    Content->SetTexture(NTexture);
-    Content->SetNativeSize();
-    SourceSize = NTexture->GetSize();
-    UpdateLayout();
+    SetImage(Texture);
 }
 
 void UGLoader::LoadExternal()

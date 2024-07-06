@@ -13,11 +13,6 @@ UGController::~UGController()
 {
 }
 
-void UGController::SetSelectedIndex(int32 Index)
-{
-    SetSelectedIndex(Index, true);
-}
-
 void UGController::SetSelectedIndex(int32 Index, bool bTriggerEvent)
 {
     if (SelectedIndex != Index)
@@ -31,7 +26,10 @@ void UGController::SetSelectedIndex(int32 Index, bool bTriggerEvent)
         Cast<UGComponent>(GetOuter())->ApplyController(this);
 
         if (bTriggerEvent)
+        {
+            OnControllerChanged.Broadcast(this, Index);
             OnChangedEvent.Broadcast(this);
+        }
 
         bChanging = false;
     }
@@ -43,11 +41,6 @@ const FString& UGController::GetSelectedPage() const
         return G_EMPTY_STRING;
     else
         return PageNames[SelectedIndex];
-}
-
-void UGController::SetSelectedPage(const FString& PageName)
-{
-    SetSelectedPage(PageName, true);
 }
 
 void UGController::SetSelectedPage(const FString& PageName, bool bTriggerEvent)

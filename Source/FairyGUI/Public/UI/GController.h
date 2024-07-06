@@ -19,14 +19,12 @@ public:
     UFUNCTION(BlueprintCallable, Category = "FairyGUI")
     int32 GetSelectedIndex() const { return SelectedIndex; }
     UFUNCTION(BlueprintCallable, Category = "FairyGUI")
-    void SetSelectedIndex(int32 Index);
-    void SetSelectedIndex(int32 Index, bool bTriggerEvent);
+    void SetSelectedIndex(int32 Index, bool bTriggerEvent = true);
 
     UFUNCTION(BlueprintCallable, Category = "FairyGUI")
     const FString& GetSelectedPage() const;
     UFUNCTION(BlueprintCallable, Category = "FairyGUI")
-    void SetSelectedPage(const FString& PageName);
-    void SetSelectedPage(const FString& PageName, bool bTriggerEvent);
+    void SetSelectedPage(const FString& PageName, bool bTriggerEvent = true);
 
     const FString& GetSelectedPageID() const;
     void SetSelectedPageID(const FString& PageID, bool bTriggerEvent = true);
@@ -50,6 +48,10 @@ public:
     bool bAutoRadioGroupDepth;
 
     DECLARE_EVENT_OneParam(UGController, FOnChanged, UGController*);
+    DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnControllerChanged, UGController*, Controller, int32, Index);
+
+    UPROPERTY(BlueprintAssignable)
+    FOnControllerChanged OnControllerChanged;
     FOnChanged& OnChanged() { return OnChangedEvent; }
 
 private:

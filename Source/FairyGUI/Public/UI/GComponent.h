@@ -53,6 +53,7 @@ public:
     UGObject* GetChildInGroup(const UGGroup* Group, const FString& ChildName, TSubclassOf<UGObject> ClassType = nullptr) const;
 
     UGObject* GetChildByID(const FString& ChildID) const;
+    UFUNCTION(BlueprintCallable, Category = "FairyGUI")
     const TArray<UGObject*>& GetChildren() const { return Children; }
 
     UFUNCTION(BlueprintCallable, Category = "FairyGUI")

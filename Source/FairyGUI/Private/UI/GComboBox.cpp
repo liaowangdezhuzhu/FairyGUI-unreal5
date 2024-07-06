@@ -92,13 +92,19 @@ const FString& UGComboBox::GetValue() const
 {
     if (SelectedIndex >= 0 && SelectedIndex < Values.Num())
         return Values[SelectedIndex];
+    else if(SelectedIndex >= 0 && SelectedIndex < Items.Num())
+        return Items[SelectedIndex];
     else
         return G_EMPTY_STRING;
 }
 
 void UGComboBox::SetValue(const FString& InValue)
 {
-    SetSelectedIndex(Values.Find(InValue));
+    const int32 FoundValue = Values.Find(InValue);
+    if(FoundValue != INDEX_NONE)
+        SetSelectedIndex(FoundValue);
+    else
+        SetSelectedIndex(Items.Find(InValue));
 }
 
 void UGComboBox::SetSelectedIndex(int32 InIndex)
